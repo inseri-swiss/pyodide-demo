@@ -1,37 +1,39 @@
-import logo from './logo.svg';
 import './App.css';
-import loadPyodide from 'loadPyodide'
 import { useState } from 'react';
 
-let pyodide = null
+const pyodideWorker = new Worker(new URL('./py-worker.js', import.meta.url));
 
-async function initPyodide() {
-  pyodide = await loadPyodide({
-    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.19.1/full/",
-  });
-};
-
-function runPy(code, setOutput){
-  if(pyodide){
-    setOutput(pyodide.runPython(code))
-  } else {
-    setOutput("Not loaded")
-  }
+const runPy = (code) => {
+  pyodideWorker.postMessage({
+    python: code
+  })
 }
-initPyodide();
 
 function App() {
+  const [stdout, setStdout] = useState("");
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
+
+  pyodideWorker.onmessage = (event) => {
+    const { data } = event;
+    setOutput(data?.res)
+  }
 
   return (
     <div className="App">
       <header className="App-header">
-        <textarea name="Text1" value={code} onChange={event => setCode(event.target.value)} cols="40" rows="5"/>
+        <textarea name="Text1" value={code} onChange={event => setCode(event.target.value)} cols="80" rows="5"/>
         <br/>
-        <button onClick={()=>runPy(code, setOutput)}>Run Code</button>
+        <button onClick={()=>runPy(code)}>Run Code</button>
+        
         <br/>
-        <div>{output}</div>
+        <span>Code Output</span>
+        <div style={{border: "solid 1px #fff", height: "100px", width: "50%"}}>{output}</div>
+        
+        <br/>
+        <span>Console</span>
+        <div style={{border: "solid 1px #fff", height: "100px", width: "50%"}}>{stdout}</div>
+        
       </header>
     </div>
   );
