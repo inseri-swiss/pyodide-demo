@@ -3,6 +3,8 @@ prototyping [Pyodide](https://github.com/pyodide/pyodide)
 ### open points
 - [x] web worker
 - [x] stdout
-- [ ] specific python version
+- [x] specific python version
+    - cannot specify version
 - [ ] inject values from outside
-- [ ] introspect matplotlib
+- [x] introspect matplotlib
+    - see comment

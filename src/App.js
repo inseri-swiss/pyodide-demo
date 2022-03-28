@@ -1,6 +1,5 @@
 import './App.css';
 import { useState } from 'react';
-
 const pyodideWorker = new Worker(new URL('./py-worker.js', import.meta.url));
 
 const runPy = (code) => {
