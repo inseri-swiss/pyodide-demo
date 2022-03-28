@@ -6,7 +6,6 @@ module.exports = {
         alias: {},
         configure:{
             externals: { 
-                loadPyodide: 'loadPyodide',
             },
         }
     },

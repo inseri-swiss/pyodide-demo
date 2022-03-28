@@ -16,23 +16,30 @@ function App() {
 
   pyodideWorker.onmessage = (event) => {
     const { data } = event;
-    setOutput(data?.res)
+    
+    if(data?.kind == "RESULT"){
+      setOutput(data?.res)
+    }
+    else {
+      setStdout(`${data?.res}\n${stdout}`)
+    }
+
   }
 
   return (
     <div className="App">
       <header className="App-header">
-        <textarea name="Text1" value={code} onChange={event => setCode(event.target.value)} cols="80" rows="5"/>
+        <textarea name="Text1" value={code} onChange={event => setCode(event.target.value)} />
         <br/>
         <button onClick={()=>runPy(code)}>Run Code</button>
         
         <br/>
         <span>Code Output</span>
-        <div style={{border: "solid 1px #fff", height: "100px", width: "50%"}}>{output}</div>
+        <div className='code'>{output}</div>
         
         <br/>
         <span>Console</span>
-        <div style={{border: "solid 1px #fff", height: "100px", width: "50%"}}>{stdout}</div>
+        <div className='code'>{stdout}</div>
         
       </header>
     </div>
