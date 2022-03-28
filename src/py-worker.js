@@ -1,5 +1,10 @@
 importScripts("https://cdn.jsdelivr.net/pyodide/v0.19.1/full/pyodide.js");
 
+const my_module = {
+    foo: 42,
+    bar: [1,2,3,4,5,6]
+}
+
 printOnConsole = (msg) => {
     self.postMessage({kind: "LOG", res: msg})
 }
@@ -11,6 +16,15 @@ async function loadPyodideAndPackages() {
   });
 
   await self.pyodide.loadPackage(["matplotlib"])
+  
+  
+  self.pyodide.registerJsModule("my_module", my_module)
+  
+  const jsObj = new Map([
+    ['country', 'Chile'],
+    ['name', 'Tom'],
+  ])
+  self.pyodide.globals.set("moo", self.pyodide.toPy(jsObj))
 }
 
 let pyodideReadyPromise = loadPyodideAndPackages();
